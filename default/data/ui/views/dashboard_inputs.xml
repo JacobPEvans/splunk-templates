@@ -1,0 +1,71 @@
+<form version="1.1" hideEdit="true" refresh="60" theme="dark">
+  <label>Dashboard Inputs</label>
+
+  <!-- define master search template, with replacement tokens delimited with $ -->
+  <search id="baseSearch">
+    <earliest>$timeSelector.earliest$</earliest>
+    <latest>$timeSelector.latest$</latest>
+    <query>
+      index=_internal
+      | table index sourcetype source log_level component name event_message
+    </query>
+  </search>
+
+
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="timeSelector" searchWhenChanged="true">
+      <label>Time Selector</label>
+      <default>
+        <earliest>-1d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="dropdownToken" searchWhenChanged="true">
+      <label>Dropdown</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <fieldForLabel>sourcetype</fieldForLabel>
+      <fieldForValue>sourcetype</fieldForValue>
+      <search base="baseSearch">
+        <query>top sourcetype</query>
+      </search>
+    </input>
+    <input type="multiselect" token="multiselectToken" searchWhenChanged="true">
+      <label>Multiselect</label>
+      <choice value="*">All</choice>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <valuePrefix>"</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter>,</delimiter>
+      <fieldForLabel>sourcetype</fieldForLabel>
+      <fieldForValue>sourcetype</fieldForValue>
+      <search base="baseSearch">
+        <query>top sourcetype</query>
+      </search>
+    </input>
+    <input type="text" token="textToken" searchWhenChanged="true">
+      <label>Raw Text</label>
+      <default>*</default>
+      <prefix>"</prefix>
+      <suffix>"</suffix>
+    </input>
+  </fieldset>
+
+  <row>
+    <!-- output the results as a 50 row events view -->
+    <event>
+      <title>Events</title>
+      <search base="baseSearch"></search>
+      <option name="count">20</option>
+    </event>
+  </row>
+  <row>
+    <table>
+      <title>Table</title>
+      <search base="baseSearch"></search>
+      <option name="count">20</option>
+      <option name="drilldown">none</option>
+    </table>
+  </row>
+</form>

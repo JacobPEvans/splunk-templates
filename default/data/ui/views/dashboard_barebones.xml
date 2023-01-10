@@ -1,0 +1,31 @@
+<form version="1.1" hideEdit="true" refresh="60" theme="dark">
+  <label>Barebones Dashboard</label>
+
+  <search id="baseSearch">
+    <earliest>$timeSelector.earliest$</earliest>
+    <latest>$timeSelector.latest$</latest>
+    <query>
+      index=_internal
+      | table index sourcetype source log_level component name event_message
+    </query>
+  </search>
+
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="timeSelector" searchWhenChanged="true">
+      <label>Time Selector</label>
+      <default>
+        <earliest>-1d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+
+  <row>
+    <table>
+      <title>Table</title>
+      <search base="baseSearch"></search>
+      <option name="count">20</option>
+      <option name="drilldown">none</option>
+    </table>
+  </row>
+</form>
